@@ -1,6 +1,6 @@
 {
 
- "name": "hy extension",
+ "name": "Vocab Bot V2",
 
 "manifest_version":2,
 
@@ -10,7 +10,7 @@
 
    {
 
-     "matches": ["https://www.vocabulary.com/lists/246458/bee"],
+     "matches": ["https://www.vocabulary.com/lists/*/bee"],
 
      
 
@@ -20,7 +20,7 @@
 
      {
 
-     "matches": ["https://www.vocabulary.com/lists/246458/bee"],
+     "matches": ["https://www.vocabulary.com/lists/*/bee"],
 
      "run_at": "document_start",
 
