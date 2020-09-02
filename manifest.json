@@ -1,0 +1,37 @@
+{
+
+ "name": "hy extension",
+
+"manifest_version":2,
+
+"version":"1.7",
+
+ "content_scripts": [
+
+   {
+
+     "matches": ["https://www.vocabulary.com/lists/246458/bee"],
+
+     
+
+     "js": ["index.js"]
+
+   },
+
+     {
+
+     "matches": ["https://www.vocabulary.com/lists/246458/bee"],
+
+     "run_at": "document_start",
+
+     "js": ["score.js"]
+
+   }
+
+ ]
+
+
+
+
+
+}
