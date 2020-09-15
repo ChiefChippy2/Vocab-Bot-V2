@@ -1,4 +1,4 @@
-var answers={};
+
 
 
 function lol(){
@@ -10,9 +10,9 @@ var inp= document.querySelector('#guessWord')
 var resolved=false;
 for(var i =0;i<q.length;i++){
 var a = q[i].innerText.replace(/"/g,"")
-let resp=local[a]||local[Object.keys(local).map(x=>x.replace(/^[a-z0-9]/gi,"")).find(x=>x==a.replace(/^[a-z0-9]/gi,"")];
-if(local[a]){
-inp.value=local[a];resolved=true;break;}
+var resp=local[a]||local[Object.keys(local).map(x=>x.replace(/^[a-z0-9]/gi,"")).find(x=>x==a.replace(/^[a-z0-9]/gi,""))];
+if(resp){
+inp.value=resp;resolved=true;break;}
 
 }
 if(!resolved) return learn()
@@ -22,32 +22,85 @@ setTimeout(function(){go.click()},2)
 if(document.getElementsByClassName("remaining")[0].innerText=="0"){
     nextBee()
 }
-
-var local=JSON.parse(localStorage.getItem("js"))
+}
+var local=JSON.parse(localStorage.getItem("js2"))
 if(local!=undefined){setInterval(lol,5)
 setTimeout(function(){document.querySelector('#bee_complete > div.actions > button').click()},150000)
                     }else{
 nextBee();
 }
 
-nextBee();
 
 function nextBee(){
-    var xhr = new XMLHttpRequest();
-xhr.open('GET', 'https://www.vocabulary.com/lists/search?query=test', true);
+    var num=localStorage.getItem("doneLists")
+    if(!num) num=[]
+    
+    fetch("https://api.vocabulary.com/1.0/lists/?q=test&"+num.length+"&limit=10", {
+    "headers": {
+        "User-Agent": navigator.userAgent,
+        "Accept": "application/json",
+        "Pragma": "no-cache",
+        "Cache-Control": "no-cache"
+    },
+    "referrer": "https://api.vocabulary.com/proxy.html",
+    "method": "GET"
+}).then(r=>r.json()).then(e=>{
+    var link= e.find(e=>num.includes(e.id));
+        if(!link) {num.concat(e.map(e=>e.id));localStorage.setItem("doneLists",num);return nextBee();}
+        num.push(link.id)
+        localStorage.setItem("doneLists",num)
+        prepareList(link.url)
+    
+    
+    })
 
-// If specified, responseType must be empty string or "text"
-xhr.responseType = 'text';
-
-xhr.onload = function () {
-    if (xhr.readyState === xhr.DONE) {
-        if (xhr.status === 200) {
-            //console.log(xhr.response);document.querySelector(".search-results.lists")
-            answer=xhr.responseText
-        }
-    }
-};
-
-xhr.send(null);
 
 }
+var islearning=false;
+function learn(inp,si){
+//we somehow have no idea what this word means.
+    if(islearning) return;
+    islearning=true
+   inp.value="idk";
+    var surrender=document.querySelector("#surrender")
+   si.click();
+   var int=setInterval(()=>{si.click()
+                           if(!surrender.disabled){
+                           clearInterval(int);
+                               surrender.click();
+                               setTimeout(()=>{
+                               
+                               local[document.getElementsByClassName('def')[0].innerText.replace(/"/g,"")]=document.querySelector("#correctspelling").innerText.split(":")[1].trim()
+                               document.querySelector('#nextword').click();
+                                   islearning=false;
+                               },500)
+                           }
+                           
+                           },50)
+   
+
+}
+function prepareList(url){
+fetch(url,{
+    "headers": {
+        "User-Agent": navigator.userAgent,
+        "Accept": "text/html"
+    },
+    "referrer": "https://www.vocabulary.com/lists/search?query=test",
+    "method": "GET"}).then(e=>e.text())
+    .then(resp=>{
+var fdoc=new DOMParser().parseFromString(resp,"text/html")
+var loc;
+Array.from(fdoc.querySelector("#wordlist").querySelectorAll("li")).forEach(x=>loc[x.getAttribute("word")]=x.querySelector(".definition").innerText)
+    localStorage.setItem("js2",loc)
+    location.path=url+"bee"
+    
+})
+
+
+
+
+
+}
+
+
