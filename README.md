@@ -26,3 +26,7 @@ Any chrome browser that has received an update since 2015 should be fine.
 # Short TOS
 
 You are allowed to use, modify, and publish this software anywhere. Please remember to mention  _my username_ somewhere in your code / acknowledgements. We don't guarantee this hack to always work. WE DON'T TAKE ANY RESPONSIBILITY FOR THIS BOT. IF YOUR ACCOUNT IS BANNED OR SUSPENDED DUE TO THIS WE DENY ANY RESPONSIBILITY.
+
+# TODO
+allow user to have a custom list of lists
+score.js ( dashboard )
