@@ -15,11 +15,12 @@ if(resp){
 inp.value=resp;resolved=true;break;}
 
 }
-if(!resolved) return learn()
+if(!resolved) return learn(inp,si)
 si.click()
 setTimeout(function(){go.click()},2)
 
 if(document.getElementsByClassName("remaining")[0].innerText=="0"){
+localStorage.setItem("js2","")
     nextBee()
 }
 }
@@ -30,12 +31,15 @@ setTimeout(function(){document.querySelector('#bee_complete > div.actions > butt
 nextBee();
 }
 
-
+if(document.getElementsByClassName("remaining")[0].innerText=="0"&&location.href.endsWith("bee")){
+localStorage.setItem("js2","")
+    nextBee()
+}
 function nextBee(){
-    var num=localStorage.getItem("doneLists")
+    var num=JSON.parse(localStorage.getItem("doneLists"))
     if(!num) num=[]
     
-    fetch("https://api.vocabulary.com/1.0/lists/?q=test&"+num.length+"&limit=10", {
+    fetch("https://cors-anywhere.herokuapp.com/"+encodeURI("https://api.vocabulary.com/1.0/lists/?q=test&skip="+num.length+"&limit=10"), {
     "headers": {
         "User-Agent": navigator.userAgent,
         "Accept": "application/json",
@@ -45,10 +49,11 @@ function nextBee(){
     "referrer": "https://api.vocabulary.com/proxy.html",
     "method": "GET"
 }).then(r=>r.json()).then(e=>{
-    var link= e.find(e=>num.includes(e.id));
-        if(!link) {num.concat(e.map(e=>e.id));localStorage.setItem("doneLists",num);return nextBee();}
+e=e.wordlists
+    var link= e.find(e=>!num.includes(e.id));
+        if(!link) {num.concat(e.map(e=>e.id));localStorage.setItem("doneLists",JSON.stringify(num));return nextBee();}
         num.push(link.id)
-        localStorage.setItem("doneLists",num)
+        localStorage.setItem("doneLists",JSON.stringify(num))
         prepareList(link.url)
     
     
@@ -90,10 +95,11 @@ fetch(url,{
     "method": "GET"}).then(e=>e.text())
     .then(resp=>{
 var fdoc=new DOMParser().parseFromString(resp,"text/html")
-var loc;
-Array.from(fdoc.querySelector("#wordlist").querySelectorAll("li")).forEach(x=>loc[x.getAttribute("word")]=x.querySelector(".definition").innerText)
-    localStorage.setItem("js2",loc)
-    location.path=url+"bee"
+var loc={};
+Array.from(fdoc.querySelector("#wordlist").querySelectorAll("li")).forEach(x=>loc[x.querySelector(".definition").innerText]=x.getAttribute("word"))
+    localStorage.setItem("js2",JSON.stringify(loc))
+
+    location.href=url+"/bee"
     
 })
 
