@@ -14,7 +14,7 @@ P.S - your computer might be laggy.
 
 1.  Download the repo as zip.
 2.  Unzip it.
-3.  Go to chrome://extensions ( USE CHROME... ).
+3.  Go to [chrome://extensions](chrome://extensions) ( USE CHROME... ).
 4.  Turn "Developer Mode" on.
 5.  Click "Load Unpacked".
 6.  Select the folder you downloaded.
