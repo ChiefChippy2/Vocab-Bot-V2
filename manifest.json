@@ -4,7 +4,7 @@
 
 "manifest_version":2,
 
-"version":"1.7",
+"version":"6.9",
 
  "content_scripts": [
 
