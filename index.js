@@ -24,6 +24,7 @@ localStorage.setItem("js2","")
     nextBee()
 }
 }
+if(!localStorage.getItem("js2")) nextBee();
 var local=JSON.parse(localStorage.getItem("js2"))
 if(local!=undefined){setInterval(lol,5)
 setTimeout(function(){document.querySelector('#bee_complete > div.actions > button').click()},150000)
