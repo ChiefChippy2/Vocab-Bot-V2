@@ -24,6 +24,7 @@ localStorage.setItem("js2","")
     nextBee()
 }
 }
+function init(){
 if(!localStorage.getItem("js2")||typeof localStorage.getItem("js2")!="object") nextBee();
 var local=JSON.parse(localStorage.getItem("js2"))
 if(local!=undefined){setInterval(lol,5)
@@ -36,6 +37,8 @@ if(document.getElementsByClassName("remaining")[0].innerText=="0"&&location.href
 localStorage.setItem("js2","")
     nextBee()
 }
+}
+window.addEventListener("ready",init)
 function nextBee(){
     var num=JSON.parse(localStorage.getItem("doneLists"))
     if(!num) num=[]
@@ -75,10 +78,11 @@ function learn(inp,si){
                            clearInterval(int);
                                surrender.click();
                                setTimeout(()=>{
-                               
+                               try{
                                local[document.getElementsByClassName('def')[0].innerText.replace(/"/g,"")]=document.querySelector("#correctspelling").innerText.split(":")[1].trim()
                                document.querySelector('#nextword').click();
                                    islearning=false;
+                               }catch(e){nextBee();}
                                },500)
                            }
                            
