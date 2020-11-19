@@ -18,7 +18,7 @@ P.S - your computer might be laggy.
 4.  Turn "Developer Mode" on.
 5.  Click "Load Unpacked".
 6.  Select the folder you downloaded.
-7.  Go to  [https://www.vocabulary.com/lists/](https://www.vocabulary.com/lists/)
+7.  Go to  a random spelling bee from [https://www.vocabulary.com/lists/](https://www.vocabulary.com/lists/)
 8.  Leave your computer on overnight or something. Don't let it overheat :D P.S - Mute the site. P.P.S - Why do you want to use this?
 # Compatibility
 Any chrome browser that has received an update since 2015 should be fine.
