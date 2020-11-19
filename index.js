@@ -15,6 +15,7 @@ if(resp){
 inp.value=resp;resolved=true;break;}
 
 }
+if(document.querySelector("#surrender").disabled.getAttribute("disabled")!="disabled") return learn(inp,si)
 if(!resolved) return learn(inp,si)
 si.click()
 setTimeout(function(){go.click()},2)
@@ -26,7 +27,7 @@ localStorage.setItem("js2","")
 }
 function init(){
 if(!localStorage.getItem("js2")||typeof localStorage.getItem("js2")!="object") nextBee();
-var local=JSON.parse(localStorage.getItem("js2"))
+window.local=JSON.parse(localStorage.getItem("js2"))
 if(local!=undefined){setInterval(lol,5)
 setTimeout(function(){document.querySelector('#bee_complete > div.actions > button').click()},150000)
                     }else{
@@ -38,7 +39,8 @@ localStorage.setItem("js2","")
     nextBee()
 }
 }
-window.addEventListener("ready",init)
+window.addEventListener("DOMContentLoaded",init)
+setTimeout(init,3000)
 function nextBee(){
     var num=JSON.parse(localStorage.getItem("doneLists"))
     if(!num) num=[]
