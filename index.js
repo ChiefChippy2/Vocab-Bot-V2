@@ -71,7 +71,7 @@ function learn(inp,si){
     var surrender=document.querySelector("#surrender")
    si.click();
    var int=setInterval(()=>{si.click()
-                           if(!surrender.disabled){
+                           if(!surrender.disabled&&surrender.getAttribute("disabled")!="disabled"){
                            clearInterval(int);
                                surrender.click();
                                setTimeout(()=>{
