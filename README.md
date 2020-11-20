@@ -7,7 +7,7 @@ More powerful than [Vocab-Bot (V1)](https://github.com/ChiefChippy2/Vocab-Bot)
  3. Fail-safe : The bot will not freeze on a word.
 # How do I use it?
 
-Go to https://vocabulary.com/lists/ and watch netflix for 3 hours while the magic operates! Also : This won't count in your class overall score I believe. 
+Go to a spelling bee and watch netflix for 3 hours while the magic operates! Also : This won't count in your class overall score I believe. 
 P.S - your computer might be laggy.
 
 # How to use it
