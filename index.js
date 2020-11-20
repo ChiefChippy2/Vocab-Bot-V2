@@ -1,119 +1,161 @@
-
-
-
-function lol(){
-
-var si= document.querySelector('#spellit')
-var go = document.querySelector('#nextword')
-var q=document.getElementsByClassName('def')
-var inp= document.querySelector('#guessWord')
-var resolved=false;
-for(var i =0;i<q.length;i++){
-var a = q[i].innerText.replace(/"/g,"")
-var resp=local[a]||local[Object.keys(local).map(x=>x.replace(/^[a-z0-9]/gi,"")).find(x=>x==a.replace(/^[a-z0-9]/gi,""))];
-if(resp){
-inp.value=resp;resolved=true;break;}
-
-}
-if(document.querySelector("#surrender").disabled.getAttribute("disabled")!="disabled") return learn(inp,si)
-if(!resolved) return learn(inp,si)
-si.click()
-setTimeout(function(){go.click()},2)
-
-if(document.getElementsByClassName("remaining")[0].innerText=="0"){
-localStorage.setItem("js2","")
-    nextBee()
-}
-}
-function init(){
-if(!localStorage.getItem("js2")||typeof localStorage.getItem("js2")!="object") nextBee();
-window.local=JSON.parse(localStorage.getItem("js2"))
-if(local!=undefined){setInterval(lol,5)
-setTimeout(function(){document.querySelector('#bee_complete > div.actions > button').click()},150000)
-                    }else{
-nextBee();
-}
-
-if(document.getElementsByClassName("remaining")[0].innerText=="0"&&location.href.endsWith("bee")){
-localStorage.setItem("js2","")
-    nextBee()
-}
-}
-window.addEventListener("DOMContentLoaded",init)
-setTimeout(init,3000)
-function nextBee(){
-    var num=JSON.parse(localStorage.getItem("doneLists"))
-    if(!num) num=[]
-    
-    fetch("https://cors-anywhere.herokuapp.com/"+encodeURI("https://api.vocabulary.com/1.0/lists/?q=test&skip="+num.length+"&limit=10"), {
-    "headers": {
-        "User-Agent": navigator.userAgent,
-        "Accept": "application/json",
-        "Pragma": "no-cache",
-        "Cache-Control": "no-cache"
-    },
-    "referrer": "https://api.vocabulary.com/proxy.html",
-    "method": "GET"
-}).then(r=>r.json()).then(e=>{
-e=e.wordlists
-    var link= e.find(e=>!num.includes(e.id));
-        if(!link) {num.concat(e.map(e=>e.id));localStorage.setItem("doneLists",JSON.stringify(num));return nextBee();}
-        num.push(link.id)
-        localStorage.setItem("doneLists",JSON.stringify(num))
-        prepareList(link.url)
-    
-    
-    })
-
-
-}
-var islearning=false;
-function learn(inp,si){
-//we somehow have no idea what this word means.
+window.addEventListener("DOMContentLoaded", init)
+setTimeout(init, 3000)
+function lol() {
     if(islearning) return;
-    islearning=true
-   inp.value="idk";
-    var surrender=document.querySelector("#surrender")
-   si.click();
-   var int=setInterval(()=>{si.click()
-                           if(!surrender.disabled&&surrender.getAttribute("disabled")!="disabled"){
-                           clearInterval(int);
-                               surrender.click();
-                               setTimeout(()=>{
-                               try{
-                               local[document.getElementsByClassName('def')[0].innerText.replace(/"/g,"")]=document.querySelector("#correctspelling").innerText.split(":")[1].trim()
-                               document.querySelector('#nextword').click();
-                                   islearning=false;
-                               }catch(e){nextBee();}
-                               },500)
-                           }
-                           
-                           },50)
-   
+    var si = document.querySelector('#spellit')
+    var go = document.querySelector('#nextword')
+    var q = document.getElementsByClassName('def')
+    var inp = document.querySelector('#guessWord')
+    var resolved = false;
+    for (var i = 0;i < q.length;i++) {
+        var a = q[i].innerText.replace(/"/g, "")
+        var resp = window.local[a] || window.local[Object.keys(window.local).map(x=>x.replace(/^[a-z0-9]/gi, ""))
+.find(x=>x == a.replace(/^[a-z0-9]/gi, ""))];
+        if (resp) {
+            inp.value = resp;
+            resolved = true;
+            break;
+        }
 
-}
-function prepareList(url){
-fetch(url,{
-    "headers": {
-        "User-Agent": navigator.userAgent,
-        "Accept": "text/html"
-    },
-    "referrer": "https://www.vocabulary.com/lists/search?query=test",
-    "method": "GET"}).then(e=>e.text())
-    .then(resp=>{
-var fdoc=new DOMParser().parseFromString(resp,"text/html")
-var loc={};
-Array.from(fdoc.querySelector("#wordlist").querySelectorAll("li")).forEach(x=>loc[x.querySelector(".definition").innerText]=x.getAttribute("word"))
-    localStorage.setItem("js2",JSON.stringify(loc))
-
-    location.href=url+"/bee"
+    }
     
+    if (document.querySelector("#surrender").getAttribute("disabled") != "disabled") return learn(inp, si)
+    if (!resolved) return learn(inp, si)
+    si.click()
+    setTimeout(function() {
+        go.click()
+    }, 2)
+
+    if (document.getElementsByClassName("remaining")[0].innerText == "0") {
+        localStorage.setItem("vocabinf", "")
+        //console.log(document.getElementsByClassName("remaining")[0])
+        nextBee(3)
+    }
+}
+
+function init() {
+    //eslint-disable-next-line no-undef
+    chrome.storage.sync.get({
+        "query": "test",
+        "proxyUrl": "https://cors-anywhere.herokuapp.com/",
+        "hide": false
+    }, function(items) {
+        window.prefs=items
+    if(window.prefs.hide) document.body.style.display="none"
+    if (!localStorage.getItem("vocabinf") || localStorage.getItem("vocabinf")[0]!=="{") nextBee(4);
+    window.local = JSON.parse(localStorage.getItem("vocabinf"))
+    if (window.local != undefined) {
+        setInterval(lol, 5)
+        setTimeout(function() {
+            document.querySelector('#bee_complete > div.actions > button').click()
+        }, 150000)
+    } else {
+        nextBee(2);
+    }
+
+    if (document.getElementsByClassName("remaining")[0].innerText == "0" && location.href.endsWith("bee")) {
+        localStorage.setItem("vocabinf", "")
+        nextBee(1)
+    }
+    })}
+var iscalled=false;
+function nextBee() {
+    if(iscalled) return;
+    iscalled=true
+    var num = JSON.parse(localStorage.getItem("doneLists"))
+    if (!num) num = []
+
+    fetch(window.prefs.proxyUrl + encodeURI("https://api.vocabulary.com/1.0/lists/?q="+window.prefs.query+"&skip=" + num.length + "&limit=10"), {
+        "headers": {
+            "User-Agent": navigator.userAgent,
+            "Accept": "application/json",
+            "Pragma": "no-cache",
+            "Cache-Control": "no-cache"
+        },
+        "referrer": "https://api.vocabulary.com/proxy.html",
+        "method": "GET"
+    }).then(r=>r.json())
+.then(e=>{
+        e = e.wordlists
+        var link = e.find(e=>!num.includes(e.id));
+        if (!link) {
+            num.concat(e.map(e=>e.id));
+            localStorage.setItem("doneLists", JSON.stringify(num));
+            iscalled=false;
+
+            return nextBee(5);
+        }
+        num.push(link.id)
+        localStorage.setItem("doneLists", JSON.stringify(num))
+        prepareList(link.url)
+
+
+    })
+.catch(()=>{
+    iscalled=false;
+    setTimeout(nextBee,5000)
+
 })
 
 
+}
+var islearning = false;
+window.strike=5
+function learn(inp, si) {
+    //we somehow have no idea what this word means.
+    if (islearning) return;
+    islearning = true
+    inp.value = "idk";
+    var rem= document.getElementsByClassName("remaining")[0].innerText;
+    if(rem==window.progress) window.strike-=1
+    else window.strike=5
+    window.progress=rem
+    if(window.strike==0) nextBee() 
+    //fuck it
+    var surrender = document.querySelector("#surrender")
+    si.click();
+    var int = setInterval(()=>{
+        si.click()
+        if (!surrender.disabled && surrender.getAttribute("disabled") != "disabled") {
+            clearInterval(int);
+            surrender.click();
+            surrender.click();
+            setTimeout(()=>{
+                try {
+                    window.local[document.getElementsByClassName('def')[0].innerText.replace(/"/g, "")] = document.querySelector("#correctspelling").innerText.split(":")[1].trim()
+                    document.querySelector('#nextword').click();
+                    islearning = false;
+                } catch (e) {
+                    nextBee();
+                }
+            }, 1000)
+        }
 
+    }, 50)
 
 
 }
 
+function prepareList(url) {
+    fetch(url, {
+            "headers": {
+                "User-Agent": navigator.userAgent,
+                "Accept": "text/html"
+            },
+            "referrer": "https://www.vocabulary.com/lists/search?query="+window.prefs.query,
+            "method": "GET"
+        }).then(e=>e.text())
+        .then(resp=>{
+            var fdoc = new DOMParser().parseFromString(resp, "text/html")
+            var loc = {};
+            Array.from(fdoc.querySelector("#wordlist").querySelectorAll("li")).forEach(x=>loc[x.querySelector(".definition").innerText] = x.getAttribute("word"))
+            localStorage.setItem("vocabinf", JSON.stringify(loc))
 
+            location.href = url + "/bee"
+
+        })
+
+
+
+
+}

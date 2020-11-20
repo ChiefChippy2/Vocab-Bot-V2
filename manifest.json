@@ -4,8 +4,13 @@
 
 "manifest_version":2,
 
-"version":"6.9",
-
+"version":"6.99",
+"permissions":["storage","unlimitedStorage"],
+"options_page": "options.html",
+"options_ui": {
+  "page": "options.html",
+  "open_in_tab": false
+},
  "content_scripts": [
 
    {
