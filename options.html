@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head><title>Vocab Bot V2 - Options</title></head>
+<body>
+<p>Leave Empty for default</p>
+    <label>
+        Search the word
+        <input type="text" id="query" placeholder="query to search">
+        for new spelling bees to complete (useful when you went through "test")
+    </label><br>
+    <label>
+        <input type="checkbox" id="hide"> Hide page
+    </label><br>
+    <label>
+        <input type="button" id="reset" value="Reset data"> ( Useful if extension doesn't work )
+    </label><br>
+    <label>
+        <input type="number" id="strike" max="100" min="3"> Max number of unknown words in a row before abandoning list
+    </label>
+<div id="status"></div><br>
+<button id="abandon">Restore</button>
+<button id="save">Save</button>
+
+<script src="options.js"></script>
+</body>
+</html>
