@@ -1,5 +1,12 @@
 # CHANGELOG
 All changes will be described here
+## V1.1.3 ( beta )
+Minor QOL tweak :
+```diff
++ Update checking upon startup.
++ Better commented and formatted (ig).
+```
+
 ## V1.1.0
 V1.1.0 is out with fixes and patches!
 What is different : 
