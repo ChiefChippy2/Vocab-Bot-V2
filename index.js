@@ -81,7 +81,7 @@ function nextBee() {
     var num = JSON.parse(localStorage.getItem("doneLists"))
     if (!num) num = []
     // there are a few million lists...
-    if (window.prefs.query === '*') return prepareList(`https://vocaulary.com/lists/${Math.floor(Math.random()*5000000)+1000000}`);
+    if (window.prefs.query === '*') return prepareList(`https://vocabulary.com/lists/${Math.floor(Math.random()*5000000)+1000000}`);
     customFetch(encodeURI("https://api.vocabulary.com/1.0/lists/?q=" + window.prefs.query + "&skip=" + num.length + "&limit=10"), {
             "headers": {
                 "User-Agent": navigator.userAgent,
@@ -169,7 +169,7 @@ function prepareList(url) {
     customFetch(url, headers)
         .then(resp=>{
             try{
-                if (JSON.parse(resp).status == 404) return prepareList(`https://vocaulary.com/lists/${Math.floor(Math.random()*5000000)+1000000}`);
+                if (JSON.parse(resp).status == 404) return prepareList(`https://vocabulary.com/lists/${Math.floor(Math.random()*5000000)+1000000}`);
                 if(JSON.parse(resp).error) return;
             }catch(e){
                 //all normal
