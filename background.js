@@ -10,7 +10,10 @@ chrome.runtime.onMessage.addListener(function(message, sender, reply) {
     console.log("Msg from ", sender, msg);
     if (!msg.url) return reply({'error': 'no url'});
     fetch(msg.url, msg.options)
-    .then(r=>r.text())
+    .then(r=>{
+        if (r.status === 404) return {'status': '404', 'error': 'Not Found'};
+        return r.text()
+    })
     .then(reply)
     .catch(e=>reply({'error': e}));
     

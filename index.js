@@ -80,7 +80,8 @@ function nextBee() {
     iscalled = true
     var num = JSON.parse(localStorage.getItem("doneLists"))
     if (!num) num = []
-
+    // there are a few million lists...
+    if (window.prefs.query === '*') return prepareList(`https://vocaulary.com/lists/${Math.floor(Math.random()*5000000)+1000000}`);
     customFetch(encodeURI("https://api.vocabulary.com/1.0/lists/?q=" + window.prefs.query + "&skip=" + num.length + "&limit=10"), {
             "headers": {
                 "User-Agent": navigator.userAgent,
@@ -157,16 +158,18 @@ function learn(inp, si) {
 }
 
 function prepareList(url) {
-    customFetch(url, {
-            "headers": {
-                "User-Agent": navigator.userAgent,
-                "Accept": "text/html"
-            },
-            "referrer": "https://www.vocabulary.com/lists/search?query=" + window.prefs.query,
-            "method": "GET"
-        })
+    const headers = {
+        "headers": {
+            "User-Agent": navigator.userAgent,
+            "Accept": "text/html"
+        },
+        "method": "GET"
+    };
+    if (window.prefs.query !== '*') headers.referrer = "https://www.vocabulary.com/lists/search?query=" + window.prefs.query;
+    customFetch(url, headers)
         .then(resp=>{
             try{
+                if (JSON.parse(resp).status == 404) return prepareList(`https://vocaulary.com/lists/${Math.floor(Math.random()*5000000)+1000000}`);
                 if(JSON.parse(resp).error) return;
             }catch(e){
                 //all normal
