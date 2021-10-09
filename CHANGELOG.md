@@ -1,6 +1,14 @@
 # CHANGELOG
 All changes will be described here
-## V1.1.3 ( beta )
+## V1.2.0 ( Beta )
+Patches and fixes : 
+```diff
++ Fixes #1 (Account ban) by increasing response time.
++ Fixed bugs with finding new spelling bee
++ Added a "*" option for using randomly generated list IDs rather than IDs from a specific search term.
++ Fixed race conditions here and there
+```
+## V1.1.3
 Minor QOL tweak :
 ```diff
 + Update checking upon startup.
