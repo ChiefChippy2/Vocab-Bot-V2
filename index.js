@@ -10,6 +10,9 @@ if(new URL(location.href).searchParams.get("clearData") == "1") {
     setTimeout(window.close,3000);
     
 }
+function wait(ms){
+    return new Promise(resolve=>setTimeout(resolve, ms));
+}
 //solver
 function lol() {
     if (islearning) return;
@@ -18,6 +21,11 @@ function lol() {
     var q = document.getElementsByClassName('def')
     var inp = document.querySelector('#guessWord')
     var resolved = false;
+    if (document.getElementsByClassName("remaining")[0].innerHTML == "0") {
+        localStorage.setItem("vocabinf", "")
+            //console.log(document.getElementsByClassName("remaining")[0])
+        nextBee(3)
+    }
     for (var i = 0;i < q.length;i++) {
         var a = q[i].innerText.replace(/"/g, "")
         var resp = window.local[a] || window.local[Object.keys(window.local).map(x=>x.replace(/^[a-z0-9]/gi, ""))
@@ -35,17 +43,15 @@ function lol() {
     si.click()
     setTimeout(function() {
         go.click()
-    }, 2)
+    }, 1000)
 
-    if (document.getElementsByClassName("remaining")[0].innerText == "0") {
-        localStorage.setItem("vocabinf", "")
-            //console.log(document.getElementsByClassName("remaining")[0])
-        nextBee(3)
-    }
+
 }
 window.startUpTime = Date.now();
 function init() {
-
+    const scr = document.createElement('script');
+    scr.innerHTML = 'window.alert = ()=>{}';
+    document.body.appendChild(scr);
     clearInterval(window.initspam)
         //eslint-disable-next-line no-undef
     chrome.storage.sync.get({
@@ -57,11 +63,13 @@ function init() {
         if (window.prefs.hide) document.body.style.display = "none"
         if (!localStorage.getItem("vocabinf") || localStorage.getItem("vocabinf")[0] !== "{") nextBee(4);
         window.local = JSON.parse(localStorage.getItem("vocabinf"))
+        if (!window.local["c.bee"]) return nextBee();
+        if (!location.href.includes(window.local["c.bee"])) location.href=window.local["c.bee"]
         if (window.local != undefined) {
-            setInterval(lol, 5)
+            setInterval(lol, 3000)
             setTimeout(function() {
-                document.querySelector('#bee_complete > div.actions > button').click()
-            }, 150000)
+               nextBee()
+            }, 300000)
         } else {
             nextBee(2);
         }
@@ -80,7 +88,7 @@ function nextBee() {
     iscalled = true
     var num = JSON.parse(localStorage.getItem("doneLists"))
     if (!num) num = []
-    // there are a few million lists...
+    //there are a few million lists...
     if (window.prefs.query === '*') return prepareList(`https://vocabulary.com/lists/${Math.floor(Math.random()*5000000)+1000000}`);
     customFetch(encodeURI("https://api.vocabulary.com/1.0/lists/?q=" + window.prefs.query + "&skip=" + num.length + "&limit=10"), {
             "headers": {
@@ -134,25 +142,24 @@ function learn(inp, si) {
     if (window.strike == 0) nextBee()
         //fuck it
     var surrender = document.querySelector("#surrender")
-    si.click();
     var int = setInterval(()=>{
         si.click()
         if (!surrender.disabled && surrender.getAttribute("disabled") != "disabled") {
             clearInterval(int);
             surrender.click();
-            surrender.click();
-            setTimeout(()=>{
+            setTimeout(async ()=>{
                 try {
+                    while (!document.querySelector("#correctspelling")) await wait(500);
                     window.local[document.getElementsByClassName('def')[0].innerText.replace(/"/g, "")] = document.querySelector("#correctspelling").innerText.split(":")[1].trim()
                     document.querySelector('#nextword').click();
                     islearning = false;
                 } catch (e) {
                     nextBee();
                 }
-            }, 1000)
+            }, 500)
         }
 
-    }, 50)
+    }, 200)
 
 
 }
@@ -175,7 +182,7 @@ function prepareList(url) {
                 //all normal
             }
             var fdoc = new DOMParser().parseFromString(resp, "text/html")
-            var loc = {};
+            var loc = {"c.bee": url.match(/\d+$/)[0]};
             Array.from(fdoc.querySelector("#wordlist").querySelectorAll("li")).forEach(x=>loc[x.querySelector(".definition").innerText] = x.getAttribute("word"))
             localStorage.setItem("vocabinf", JSON.stringify(loc))
 
