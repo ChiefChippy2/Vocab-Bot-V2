@@ -181,12 +181,16 @@ function prepareList(url) {
             }catch(e){
                 //all normal
             }
-            var fdoc = new DOMParser().parseFromString(resp, "text/html")
-            var loc = {"c.bee": url.match(/\d+$/)[0]};
-            Array.from(fdoc.querySelector("#wordlist").querySelectorAll("li")).forEach(x=>loc[x.querySelector(".definition").innerText] = x.getAttribute("word"))
-            localStorage.setItem("vocabinf", JSON.stringify(loc))
+            try{
+                var fdoc = new DOMParser().parseFromString(resp, "text/html")
+                var loc = {"c.bee": url.match(/\d+$/)[0]};
+                Array.from(fdoc.querySelector("#wordlist").querySelectorAll("li")).forEach(x=>loc[x.querySelector(".definition").innerText] = x.getAttribute("word"))
+                localStorage.setItem("vocabinf", JSON.stringify(loc))
 
-            location.href = url + "/bee"
+                location.href = url + "/bee"
+            }catch(e){
+                prepareList(`https://vocabulary.com/lists/${Math.floor(Math.random()*5000000)+1000000}`);
+            }
 
         })
 
